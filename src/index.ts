@@ -20,7 +20,10 @@ declare global {
 
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: [
+      "http://localhost:3000",
+      "https://inreal-assignment-frontend.vercel.app/",
+    ],
     credentials: process.env.NODE_ENV === "production" ? true : false,
   })
 );
