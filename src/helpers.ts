@@ -12,13 +12,13 @@ export const userResponse = (user: User) => {
 
 export const generateToken = (user: User) => {
   const accessToken = jwt.sign(
-    { id: user._id, name: user.name, email: user.email },
+    { _id: user._id, name: user.name, email: user.email },
     jwtSecret as string,
     { expiresIn: "15m" }
   );
 
   const refreshToken = jwt.sign(
-    { id: user._id, name: user.name, email: user.email },
+    { _id: user._id, name: user.name, email: user.email },
     refreshSecret as string,
     { expiresIn: "7d" }
   );

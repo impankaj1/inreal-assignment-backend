@@ -66,3 +66,4 @@ export default UserModel;
 export type UserCreateDTO = z.infer<typeof SignupSchema>;
 
 export type UserLoginDTO = z.infer<typeof LoginSchema>;
+export type UserUpdateDTO = Partial<UserCreateDTO>;

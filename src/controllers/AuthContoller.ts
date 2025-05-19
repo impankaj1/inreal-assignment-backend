@@ -25,11 +25,13 @@ class AuthController {
       data = SignupSchema.parse(data);
     } catch (error: any) {
       if (error instanceof ZodError) {
-        return res.status(403).json({ message: error.errors[0]?.message });
+        return res
+          .status(403)
+          .json({ message: error.errors.map((e) => e.message).join(", ") });
       }
       return res
         .status(403)
-        .json({ message: "Unexpected error Occured please try again" });
+        .json({ message: "Unexpected error occurred please try again" });
     }
 
     const existingUser = await userService.findUserByEmail(data.email);
@@ -72,11 +74,13 @@ class AuthController {
       data = LoginSchema.parse(data);
     } catch (error) {
       if (error instanceof ZodError) {
-        return res.status(403).json({ message: error.errors[0]?.message });
+        return res
+          .status(403)
+          .json({ message: error.errors.map((e) => e.message).join(", ") });
       }
       return res
         .status(403)
-        .json({ message: "Unexpected error Occured please try again" });
+        .json({ message: "Unexpected error occurred please try again" });
     }
 
     const user = await userService.findUserByEmail(data.email);
@@ -120,7 +124,7 @@ class AuthController {
     const { refreshToken } = req.cookies;
 
     if (!refreshToken) {
-      return res.status(401).json({ message: "Invalid refresh token" });
+      return res.status(401).json({ message: "Refresh token not found" });
     }
 
     if (!refreshSecret) {
@@ -137,7 +141,9 @@ class AuthController {
     );
 
     if (!dbRefreshToken) {
-      return res.status(404).json({ message: " refresh token not found" });
+      return res
+        .status(404)
+        .json({ message: "Refresh token not found in database" });
     }
 
     const isRefreshTokenValid = await bcrypt.compare(
@@ -146,13 +152,15 @@ class AuthController {
     );
 
     if (!isRefreshTokenValid) {
-      return res.status(401).json({ message: "Invalid refresh token" });
+      return res
+        .status(401)
+        .json({ message: "Refresh token is invalid or expired" });
     }
 
     const user = await userService.findUserByEmail(dbRefreshToken.email);
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found " });
     }
 
     const { accessToken, refreshToken: newRefreshToken } = generateToken(user);

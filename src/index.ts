@@ -2,9 +2,11 @@ import express from "express";
 import "dotenv/config";
 import "./db/index";
 import cors from "cors";
-import userRouter from "./routes/AuthRoutes";
 import { User } from "./models/User";
 import cookieParser from "cookie-parser";
+import authRouter from "./routes/AuthRoutes";
+import jobRouter from "./routes/JobRoutes";
+import authMiddleware from "./middleware";
 const app = express();
 
 app.use(express.json());
@@ -24,11 +26,14 @@ app.use(
       "http://localhost:3000",
       "https://inreal-assignment-frontend.vercel.app/",
     ],
-    credentials: process.env.NODE_ENV === "production" ? true : false,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-app.use("/auth", userRouter);
+app.use("/auth", authRouter);
+app.use("/jobs", authMiddleware, jobRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello World ");

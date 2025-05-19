@@ -8,25 +8,36 @@ const authMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   const header = req.headers.authorization;
   const token = header?.split(" ")[1];
   if (!token) {
-    return res.status(401).json({ message: "Unauthorized" });
+    res.status(401).json({ message: "Unauthorized" });
+    return;
   }
 
   if (!jwtSecret) {
-    return res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error" });
+    return;
   }
 
-  const decoded = jwt.verify(token, jwtSecret) as Partial<User>;
-  if (!decoded) {
-    return res.status(401).json({ message: "Unauthorized" });
+  let decoded: Partial<User> | null = null;
+
+  try {
+    decoded = jwt.verify(token, jwtSecret) as Partial<User>;
+  } catch (error: any) {
+    if (error.name === "TokenExpiredError") {
+      res.status(401).json({ message: "JWT expired" });
+      return;
+    }
+    res.status(401).json({ message: "Unauthorized" });
+    return;
   }
 
   const user = await userService.findUserById(decoded._id as unknown as string);
   if (!user) {
-    return res.status(401).json({ message: "Unauthorized" });
+    res.status(401).json({ message: "Unauthorized" });
+    return;
   }
 
   req.user = user;

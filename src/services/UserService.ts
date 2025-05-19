@@ -10,9 +10,9 @@ class UserService {
     return UserService._instance;
   }
 
-  public async createUser(data: UserCreateDTO): Promise<User | null> {
+  public async createUser(data: UserCreateDTO): Promise<User> {
     const user = await UserModel.create(data);
-    return user ? user.toObject() : null;
+    return user.toObject();
   }
 
   public async findUserByEmail(email: string): Promise<User | null> {
