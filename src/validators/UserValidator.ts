@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { JobType } from "../models/User";
+import { JobType, Role } from "../models/User";
 
 export const SignupSchema = z.object({
   name: z
@@ -12,10 +12,9 @@ export const SignupSchema = z.object({
   password: z.string().min(8, "Password should be at least 8 characters"),
   experience: z.number().min(0, "Experience is required"),
   preferred_job_type: z.nativeEnum(JobType),
-  skills: z
-    .array(z.string({ message: "Skills are required" }))
-    .min(1, "Skills are required"),
+  skills: z.array(z.string()).optional(),
   location: z.string().min(1, "Location is required"),
+  role: z.nativeEnum(Role),
 });
 
 export const LoginSchema = z.object({

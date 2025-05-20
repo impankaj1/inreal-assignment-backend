@@ -6,6 +6,7 @@ import { User } from "./models/User";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/AuthRoutes";
 import jobRouter from "./routes/JobRoutes";
+import userRouter from "./routes/UserRoutes";
 import authMiddleware from "./middleware";
 const app = express();
 
@@ -34,6 +35,7 @@ app.use(
 
 app.use("/auth", authRouter);
 app.use("/jobs", authMiddleware, jobRouter);
+app.use("/users", authMiddleware, userRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello World ");

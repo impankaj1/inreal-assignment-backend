@@ -22,6 +22,11 @@ class JobService {
     return jobs;
   }
 
+  public async getJobsByUser(userId: string): Promise<Job[]> {
+    const jobs = await JobModel.find({ createdBy: userId });
+    return jobs;
+  }
+
   public async getJobById(id: string): Promise<Job | null> {
     const job = await JobModel.findById(id);
     return job ? job.toObject() : null;
@@ -29,7 +34,7 @@ class JobService {
 
   public async createJob(job: JobCreateDTO) {
     const newJob = await JobModel.create(job);
-    return newJob;
+    return newJob.toObject();
   }
 
   public async updateJob(id: string, job: JobUpdateDTO): Promise<Job | null> {
@@ -47,7 +52,7 @@ class JobService {
       const prompt = `Given the following user profile and available jobs, return a JSON array of job IDs that best match the user's profile. Consider the user's skills, experience, preferred job type, and location.
 
 User Profile:
-- Skills: ${user.skills.join(", ")}
+- Skills: ${user.skills?.join(", ") || "No skills provided"}
 - Experience: ${user.experience} years
 - Preferred Job Type: ${user.preferred_job_type}
 - Location: ${user.location}

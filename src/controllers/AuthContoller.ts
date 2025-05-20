@@ -1,4 +1,4 @@
-import { UserCreateDTO, UserLoginDTO } from "../models/User";
+import User, { UserCreateDTO, UserLoginDTO } from "../models/User";
 import { LoginSchema, SignupSchema } from "../validators/UserValidator";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
@@ -180,9 +180,22 @@ class AuthController {
       .json({ token: accessToken });
   }
 
-  public async logout(req: Request, res: Response) {
+  public async logout(req: Request, res: Response): Promise<any> {
     res.clearCookie("refreshToken");
     res.status(200).json({ message: "Logged out successfully" });
+  }
+
+  public async fetchMe(req: Request, res: Response): Promise<any> {
+    const { _id } = req.user;
+    try {
+      const user = await userService.findUserById(_id as unknown as string);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
   }
 }
 

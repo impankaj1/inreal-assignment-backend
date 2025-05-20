@@ -21,6 +21,15 @@ class JobController {
     return res.status(200).json(jobs);
   }
 
+  public async getJobsByUser(req: Request, res: Response): Promise<any> {
+    const { userId } = req.params;
+    if (!userId) {
+      return res.status(400).json({ message: "User ID not provided" });
+    }
+    const jobs = await jobService.getJobsByUser(userId);
+    return res.status(200).json(jobs);
+  }
+
   public async getJobById(req: Request, res: Response): Promise<any> {
     const { id } = req.params;
     if (!id) {
@@ -48,7 +57,7 @@ class JobController {
     }
 
     const job = await jobService.createJob(data);
-    return res.status(201).json(job);
+    return res.status(200).json(job);
   }
 
   public async updateJob(req: Request, res: Response): Promise<any> {

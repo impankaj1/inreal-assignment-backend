@@ -11,6 +11,7 @@ export interface Job {
   salary: number;
   jobType: string;
   company: string;
+  createdBy: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -23,6 +24,7 @@ const JobSchema = new mongoose.Schema(
     salary: { type: Number, required: true },
     company: { type: String, required: true },
     jobType: { type: String, enum: JobType, required: true },
+    createdBy: { type: String, required: true },
   },
   { timestamps: true }
 );

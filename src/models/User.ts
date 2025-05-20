@@ -8,6 +8,11 @@ export enum JobType {
   ONSITE = "onsite",
 }
 
+export enum Role {
+  ADMIN = "admin",
+  USER = "user",
+}
+
 export interface User {
   _id: Types.ObjectId;
   name: string;
@@ -17,6 +22,7 @@ export interface User {
   preferred_job_type: string;
   skills: string[];
   location: string;
+  role: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -54,6 +60,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
       required: true,
+    },
+    role: {
+      type: String,
+      enum: Role,
+      default: Role.USER,
     },
   },
   { timestamps: true }

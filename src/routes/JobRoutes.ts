@@ -6,6 +6,7 @@ const jobRouter = Router();
 jobRouter.get("/", jobController.getJobs);
 
 jobRouter.get("/matches/:userId", jobController.findUserMatches);
+jobRouter.get("/user/:userId", jobController.getJobsByUser);
 
 jobRouter.get("/:id", jobController.getJobById);
 jobRouter.post("/", jobController.createJob);

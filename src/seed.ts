@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import JobModel from "./models/Jobs";
 import { JobType } from "./models/User";
 import "dotenv/config";
+import UserModel from "./models/User";
 
 const jobs = [
   {
@@ -99,8 +100,11 @@ const jobs = [
 const seedDatabase = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI as string);
+    const users = await UserModel.findOne();
 
-    await JobModel.insertMany(jobs);
+    await JobModel.insertMany(
+      jobs.map((job) => ({ ...job, createdBy: users?.toObject()._id }))
+    );
 
     await mongoose.disconnect();
   } catch (error) {

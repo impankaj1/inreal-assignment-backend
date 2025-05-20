@@ -8,4 +8,5 @@ export const JobCreateSchema = z.object({
   salary: z.number().min(1),
   jobType: z.nativeEnum(JobType),
   company: z.string().min(1),
+  createdBy: z.string().min(1),
 });
